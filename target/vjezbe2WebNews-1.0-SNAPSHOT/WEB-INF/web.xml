@@ -16,6 +16,22 @@
         <servlet-name>ShowNewsList</servlet-name>
         <servlet-class>servleti.ShowNewsList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditorOption</servlet-name>
+        <servlet-class>servleti.EditorOption</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddNews</servlet-name>
+        <servlet-class>servleti.AddNews</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PickNews</servlet-name>
+        <servlet-class>servleti.PickNews</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowCommentsList</servlet-name>
+        <servlet-class>servleti.ShowCommentsList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -27,6 +43,22 @@
     <servlet-mapping>
         <servlet-name>ShowNewsList</servlet-name>
         <url-pattern>/ShowNewsList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditorOption</servlet-name>
+        <url-pattern>/EditorOption</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddNews</servlet-name>
+        <url-pattern>/AddNews</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PickNews</servlet-name>
+        <url-pattern>/PickNews</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowCommentsList</servlet-name>
+        <url-pattern>/ShowCommentsList</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

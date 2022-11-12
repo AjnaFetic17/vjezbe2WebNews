@@ -12,8 +12,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +23,7 @@ import utils.DB;
  *
  * @author Blandus
  */
-public class ShowNewsList extends HttpServlet {
+public class AddNews extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +42,10 @@ public class ShowNewsList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ShowNewsList</title>");
+            out.println("<title>Servlet AddNews</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ShowNewsList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddNews at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -81,51 +79,56 @@ public class ShowNewsList extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
+        String address = "";
 
-        ArrayList<News> news = new ArrayList<>();
+        String title = request.getParameter("title");
+        int type = Integer.parseInt(request.getParameter("typeID"));
+        String content = request.getParameter("content");
+
+        User user = (User) session.getAttribute("user");
+
+        News news = new News(title, content);
+
         Connection con = null;
         Statement stmt = null;
-        Statement stmt2 = null;
 
-        String address = "";
-        String upit = "SELECT n.NewsID, n.NewsTitle, n.Content, n.PublicationDate, "
-                + "t.Type FROM news as n join newstype as t on "
-                + "n.NewsTypeID=t.NewsTypeID  where Deleted='0';";
-        ResultSet rs = null;
         try {
             con = DB.getConnection();
             stmt = con.createStatement();
-
-            rs = stmt.executeQuery(upit);
-            while (rs.next()) {
-                News temp = new News();
-              
-                int id = rs.getInt("NewsID");
-                temp.setNewsID(rs.getInt("NewsID"));
-                temp.setNewsTitle(rs.getString("NewsTitle"));
-                temp.setContent(rs.getString("Content"));
-                temp.setPublicationDate(rs.getString("PublicationDate"));
-                temp.setNewsType(rs.getString("Type"));
-
-               
-                news.add(temp);
-
+            
+            String querryIn="insert into news (NewsTitle, NewsTypeID,"
+                    + "Content) values ('"+title+"','"+type+"','"+content+"');";
+            stmt.execute(querryIn);
+            
+            String querryNewsId="Select NewsID from "
+                    + "news where NewsTitle = '"+title+"';";
+            
+            ResultSet rsNewsId= stmt.executeQuery(querryNewsId);
+            Integer newsID=null;
+            
+            if(rsNewsId.next()){
+               newsID = rsNewsId.getInt("NewsID");
             }
-            session.setAttribute("news", news);
-
-            address = "showNewsList.jsp";
+            
+            String querryJoin = "insert into newseditor (UserID, NewsID)"
+                    + "values ('"+user.getUserID()+"','"+ newsID+"');";
+            
+            stmt.execute(querryJoin);
+            
+            
             stmt.close();
             con.close();
-        } catch (SQLException e) {
+            
+        } catch (SQLException ex) {
             session.invalidate();
-            String err = e.getMessage();
-            request.setAttribute("errormsg", err);
+            request.setAttribute("errormsg", ex.getMessage());
             address = "error.jsp";
-
+        } catch (Exception ex) {
+            session.invalidate();
+            request.setAttribute("errormsg", ex.getMessage());
+            address = "error.jsp";
         }
-
-        RequestDispatcher rd = request.getRequestDispatcher(address);
-        rd.forward(request, response);
+        request.getRequestDispatcher(address).forward(request, response);
     }
 
     /**

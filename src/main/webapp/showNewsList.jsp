@@ -27,7 +27,6 @@
                 <th style="border: 1px solid black;">Show comments..</th>
 
             </tr>
-
             <c:forEach items="${news}" var="n">
                 <tr style="border: 1px solid black;">
                     <td style="border: 1px solid black;"> <h4>${n.newsID} </h4></td>

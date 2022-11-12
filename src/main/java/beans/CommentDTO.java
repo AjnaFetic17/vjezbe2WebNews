@@ -64,6 +64,13 @@ public class CommentDTO {
         return publicationDate;
     }
 
+    public CommentDTO(Integer commentID, Integer userID, String username, String commentText) {
+        this.commentID = commentID;
+        this.userID = userID;
+        this.username = username;
+        this.commentText = commentText;
+    }
+
     public void setPublicationDate(String publicationDate) {
         this.publicationDate = publicationDate;
     }
